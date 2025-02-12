@@ -14,7 +14,7 @@
 		0F8B2D922D5CDDB1004B8696 /* Exceptions for "prography-test" folder in "prography-test" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = 0F8B2D7C2D5CDDB0004B8696 /* prography-test */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YBKAN7VADJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "prography-test/Info.plist";
+				INFOPLIST_FILE = "prography-test/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -180,7 +180,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YBKAN7VADJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "prography-test/Info.plist";
+				INFOPLIST_FILE = "prography-test/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
