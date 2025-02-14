@@ -5,8 +5,19 @@
 //  Created by 이명지 on 2/15/25.
 //
 
+struct MovieResponse: Decodable {
+    let dates: DateRange
+    let pages: Int
+    let results: [Movie]
+}
+
+struct DateRange: Decodable {
+    let maximum: String
+    let minimum: String
+}
+
 struct Movie: Decodable {
-    let id: String
+    let id: Int
     let title: String
     let originalTitle: String
     let poster: String
