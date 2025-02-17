@@ -1,5 +1,5 @@
 //
-//  TMDBAPI.swift
+//  MovieAPI.swift
 //  prography-test
 //
 //  Created by 이명지 on 2/17/25.
@@ -8,7 +8,7 @@
 import Moya
 import Foundation
 
-enum TMDBAPI {
+enum MovieAPI {
     case nowPlaying
     case popular
     case topRated
@@ -16,7 +16,7 @@ enum TMDBAPI {
     case poster(path: String)
 }
 
-extension TMDBAPI: TargetType {
+extension MovieAPI: TargetType {
     var baseURL: URL {
         switch self {
         case .nowPlaying, .popular, .topRated, .movie:
