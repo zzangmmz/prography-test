@@ -7,7 +7,7 @@
 
 struct MovieResponse: Decodable {
     let dates: DateRange
-    let pages: Int
+    let page: Int
     let results: [Movie]
 }
 
