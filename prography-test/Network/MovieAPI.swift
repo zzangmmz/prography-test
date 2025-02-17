@@ -67,7 +67,7 @@ extension MovieAPI: TargetType {
     var headers: [String : String]? {
         switch self {
         default:
-            [
+            return [
                 "Authorization": "Bearer \(Constants.accessToken)",
                 "accept": "application/json"
             ]
