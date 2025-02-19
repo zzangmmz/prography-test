@@ -51,4 +51,16 @@ final class MovieCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupSubviews() {
+        [
+            posterImageView,
+            titleLabel,
+            overViewLabel,
+            rateLabel,
+            genreStackView
+        ].forEach {
+            addSubview($0)
+        }
+    }
+
 }
