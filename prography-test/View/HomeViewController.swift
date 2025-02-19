@@ -54,6 +54,10 @@ final class HomeViewController: UIViewController {
             CarouselViewCell.self,
             forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
         )
+        collectionView.register(
+            MovieCell.self,
+            forCellWithReuseIdentifier: String(describing: Movie.self)
+        )
     }
     
     private func createLayout() -> UICollectionViewLayout {
