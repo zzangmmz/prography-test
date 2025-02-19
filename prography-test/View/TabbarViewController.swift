@@ -17,6 +17,9 @@ final class TabbarViewController: UITabBarController {
     }
     
     private func setupTabbar() {
+        let customTabBar = CustomTabbar()
+        setValue(customTabBar, forKey: "tabBar")
+        
         let appearanceTabbar = UITabBarAppearance()
         appearanceTabbar.configureWithOpaqueBackground()
         appearanceTabbar.backgroundColor = .gray6
@@ -53,5 +56,13 @@ final class TabbarViewController: UITabBarController {
                                         selectedImage: UIImage(named: "Star"))
         
         self.viewControllers = [homeNav, myNav]
+    }
+}
+
+class CustomTabbar: UITabBar {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        var sizeThatFits = super.sizeThatFits(size)
+        sizeThatFits.height = 104
+        return sizeThatFits
     }
 }
