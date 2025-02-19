@@ -42,7 +42,18 @@ final class HomeViewController: UIViewController {
     
     // MARK: - 컴포지셔널 레이아웃
     private func setupCompositionalLayout() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
+        collectionView = UICollectionView(
+            frame: view.bounds,
+            collectionViewLayout: createLayout()
+        )
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.backgroundColor = .systemBackground
+        view.addSubview(collectionView)
+        
+        collectionView.register(
+            CarouselViewCell.self,
+            forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
+        )
     }
     
     private func createLayout() -> UICollectionViewLayout {
