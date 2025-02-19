@@ -50,19 +50,7 @@ final class HomeViewController: UIViewController {
         collectionView.backgroundColor = .systemBackground
         view.addSubview(collectionView)
         
-        collectionView.register(
-            CarouselViewCell.self,
-            forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
-        )
-        collectionView.register(
-            MovieCell.self,
-            forCellWithReuseIdentifier: String(describing: Movie.self)
-        )
-        collectionView.register(
-            SectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: String(describing: SectionHeaderView.self)
-        )
+        registerCells()
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -134,5 +122,21 @@ final class HomeViewController: UIViewController {
         section.boundarySupplementaryItems = [header]
         
         return section
+    }
+    
+    private func registerCells() {
+        collectionView.register(
+            CarouselViewCell.self,
+            forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
+        )
+        collectionView.register(
+            MovieCell.self,
+            forCellWithReuseIdentifier: String(describing: Movie.self)
+        )
+        collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: String(describing: SectionHeaderView.self)
+        )
     }
 }
