@@ -13,6 +13,7 @@ final class TabbarViewController: UITabBarController {
         super.viewDidLoad()
         
         setupTabbar()
+        setupTabbarItems()
     }
     
     private func setupTabbar() {
@@ -33,5 +34,24 @@ final class TabbarViewController: UITabBarController {
         // 탭바 아이콘 색상
         appearanceTabbar.stackedLayoutAppearance.normal.iconColor = .black              // 기본 색상
         appearanceTabbar.stackedLayoutAppearance.selected.iconColor = .highlightRed     // 선택 색상
+        
+        tabBar.standardAppearance = appearanceTabbar
+        tabBar.scrollEdgeAppearance = appearanceTabbar
+    }
+    
+    private func setupTabbarItems() {
+        let homeVC = HomeViewController()
+        let homeNav = UINavigationController(rootViewController: homeVC)
+        homeNav.tabBarItem = UITabBarItem(title: "HOME",
+                                          image: UIImage(named: "house"),
+                                          selectedImage: UIImage(named: "house"))
+        
+        let myVC = MyViewController()
+        let myNav = UINavigationController(rootViewController: myVC)
+        myNav.tabBarItem = UITabBarItem(title: "MY",
+                                        image: UIImage(named: "Star"),
+                                        selectedImage: UIImage(named: "Star"))
+        
+        self.viewControllers = [homeNav, myNav]
     }
 }
