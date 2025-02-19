@@ -16,7 +16,7 @@ private enum Section: Int {
 }
 
 final class HomeViewController: UIViewController {
-    private var disposebag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private var viewModel: HomeViewModel
     private var collectionView = UICollectionView()
     
@@ -54,7 +54,6 @@ final class HomeViewController: UIViewController {
         navigationItem.titleView = imageView
     }
     
-    // MARK: - 컴포지셔널 레이아웃
     private func setupCompositionalLayout() {
         collectionView = UICollectionView(
             frame: view.bounds,
@@ -67,6 +66,113 @@ final class HomeViewController: UIViewController {
         registerCells()
     }
     
+    private func registerCells() {
+        collectionView.register(
+            CarouselViewCell.self,
+            forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
+        )
+        collectionView.register(
+            MovieCell.self,
+            forCellWithReuseIdentifier: String(describing: Movie.self)
+        )
+        collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: String(describing: SectionHeaderView.self)
+        )
+    }
+    
+    private func bind() {
+        collectionView.rx.itemSelected
+            .bind { [weak self] indexPath in
+                // 리뷰로 이동
+            }
+            .disposed(by: disposeBag)
+        
+        let sections = viewModel.movies
+            .map { movies -> [MovieSection] in
+                [
+                    MovieSection(
+                        header: "Now Playing",
+                        items: movies
+                    ),
+                    MovieSection(
+                        header: "Popular",
+                        items: movies)
+                    ,
+                    MovieSection(
+                        header: "Top Rated",
+                        items: movies
+                    )
+                ]
+            }
+        
+        sections
+            .bind(to: collectionView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
+        viewModel.error
+            .bind { [weak self] error in
+                let alert = UIAlertController(
+                    title: "에러",
+                    message: error.localizedDescription,
+                    preferredStyle: .alert
+                )
+                alert.addAction(
+                    UIAlertAction(
+                        title: "확인",
+                        style: .destructive
+                    )
+                )
+                self?.present(alert, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.fetchNowPlayingMovies()
+    }
+    
+    private lazy var dataSource = RxCollectionViewSectionedReloadDataSource<MovieSection>(
+        configureCell: { [weak self] dataSource, collectionView, indexPath, movie in
+            switch Section(rawValue: indexPath.section) {
+            case .mainCarousel:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: String(describing: CarouselViewCell.self),
+                    for: indexPath
+                ) as! CarouselViewCell
+                cell.configure(with: movie)
+                return cell
+            case .movieTable:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: String(describing: MovieCell.self),
+                    for: indexPath
+                ) as! MovieCell
+                cell.configure(with: movie)
+                return cell
+            case .none:
+                return UICollectionViewCell()
+            }
+        },
+        configureSupplementaryView: { [weak self] dataSource, collectionView, kind, indexPath in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionReusableView()
+            }
+            
+            let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: String(describing: SectionHeaderView.self),
+                for: indexPath
+            ) as! SectionHeaderView
+            
+            if indexPath.section == Section.movieTable.rawValue {
+                headerView.configure(with: "Now Playing")
+            }
+            
+            return headerView
+        }
+    )
+}
+
+extension HomeViewController {
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
@@ -137,60 +243,4 @@ final class HomeViewController: UIViewController {
         
         return section
     }
-    
-    private func registerCells() {
-        collectionView.register(
-            CarouselViewCell.self,
-            forCellWithReuseIdentifier: String(describing: CarouselViewCell.self)
-        )
-        collectionView.register(
-            MovieCell.self,
-            forCellWithReuseIdentifier: String(describing: Movie.self)
-        )
-        collectionView.register(
-            SectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: String(describing: SectionHeaderView.self)
-        )
-    }
-    
-    private lazy var dataSource = RxCollectionViewSectionedReloadDataSource<MovieSection>(
-        configureCell: { [weak self] dataSource, collectionView, indexPath, movie in
-            switch Section(rawValue: indexPath.section) {
-            case .mainCarousel:
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: String(describing: CarouselViewCell.self),
-                    for: indexPath
-                ) as! CarouselViewCell
-                cell.configure(with: movie)
-                return cell
-            case .movieTable:
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: String(describing: MovieCell.self),
-                    for: indexPath
-                ) as! MovieCell
-                cell.configure(with: movie)
-                return cell
-            case .none:
-                return UICollectionViewCell()
-            }
-        },
-        configureSupplementaryView: { [weak self] dataSource, collectionView, kind, indexPath in
-            guard kind == UICollectionView.elementKindSectionHeader else {
-                return UICollectionReusableView()
-            }
-            
-            let headerView = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: String(describing: SectionHeaderView.self),
-                for: indexPath
-            ) as! SectionHeaderView
-            
-            if indexPath.section == Section.movieTable.rawValue {
-                headerView.configure(with: "Now Playing")
-            }
-            
-            return headerView
-        }
-    )
 }
