@@ -21,7 +21,7 @@ final class CarouselView: UIView {
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPrefetchingEnabled = false
-        // cell register
+        collectionView.register(CarouselViewCell.self, forCellWithReuseIdentifier: String(describing: CarouselViewCell.self))
         
         return collectionView
     }()
