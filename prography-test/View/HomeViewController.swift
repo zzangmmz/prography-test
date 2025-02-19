@@ -58,6 +58,11 @@ final class HomeViewController: UIViewController {
             MovieCell.self,
             forCellWithReuseIdentifier: String(describing: Movie.self)
         )
+        collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: String(describing: SectionHeaderView.self)
+        )
     }
     
     private func createLayout() -> UICollectionViewLayout {
