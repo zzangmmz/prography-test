@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxDataSources
 
 private enum Section: Int {
     case mainCarousel
@@ -13,6 +16,7 @@ private enum Section: Int {
 }
 
 final class HomeViewController: UIViewController {
+    private var disposebag = DisposeBag()
     private var viewModel: HomeViewModel
     private var collectionView = UICollectionView()
     
@@ -149,4 +153,44 @@ final class HomeViewController: UIViewController {
             withReuseIdentifier: String(describing: SectionHeaderView.self)
         )
     }
+    
+    private lazy var dataSource = RxCollectionViewSectionedReloadDataSource<MovieSection>(
+        configureCell: { [weak self] dataSource, collectionView, indexPath, movie in
+            switch Section(rawValue: indexPath.section) {
+            case .mainCarousel:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: String(describing: CarouselViewCell.self),
+                    for: indexPath
+                ) as! CarouselViewCell
+                cell.configure(with: movie)
+                return cell
+            case .movieTable:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: String(describing: MovieCell.self),
+                    for: indexPath
+                ) as! MovieCell
+                cell.configure(with: movie)
+                return cell
+            case .none:
+                return UICollectionViewCell()
+            }
+        },
+        configureSupplementaryView: { [weak self] dataSource, collectionView, kind, indexPath in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionReusableView()
+            }
+            
+            let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: String(describing: SectionHeaderView.self),
+                for: indexPath
+            ) as! SectionHeaderView
+            
+            if indexPath.section == Section.movieTable.rawValue {
+                headerView.configure(with: "Now Playing")
+            }
+            
+            return headerView
+        }
+    )
 }
