@@ -11,7 +11,7 @@ import SnapKit
 final class CarouselView: UIView {
     private var items: [Movie] = []
     
-    private lazy var collectionView: UICollectionView = {
+    private(set) lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 10
