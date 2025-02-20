@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoryView: UICollectionView {
+final class CategoryView: UIView {
     private var categories = MovieCategory.allCases
     
     private(set) lazy var collectionView: UICollectionView = {
@@ -23,4 +23,21 @@ final class CategoryView: UICollectionView {
         
         return collectionView
     }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupUI() {
+        addSubview(collectionView)
+        
+        collectionView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
 }
