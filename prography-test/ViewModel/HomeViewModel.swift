@@ -65,4 +65,8 @@ final class HomeViewModel {
             )
             .disposed(by: disposeBag)
     }
+    
+    func updateSelectedCategory(_ category: MovieCategory) {
+        selectedCategory.accept(category)
+    }
 }
