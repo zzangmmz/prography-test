@@ -32,6 +32,11 @@ final class CarouselCell: UICollectionViewCell {
         return label
     }()
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.addGradientShadow()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
