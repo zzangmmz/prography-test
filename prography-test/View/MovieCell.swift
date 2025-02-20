@@ -43,7 +43,7 @@ final class MovieCell: UICollectionViewCell {
     private let genreStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 2
+        stackView.spacing = 4
         return stackView
     }()
     
@@ -97,7 +97,8 @@ final class MovieCell: UICollectionViewCell {
         
         self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         movie.genres.forEach {
-            let genreTagLabel = createGenreTagLabel(text: String($0))
+            let genreName = Genre.getGenreName(for: $0)
+            let genreTagLabel = createGenreTagLabel(text: genreName)
             genreTagLabel.snp.makeConstraints {
                 $0.size.equalTo(CGSize(width: 40, height: 16))
             }
