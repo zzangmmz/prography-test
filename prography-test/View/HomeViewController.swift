@@ -281,7 +281,9 @@ extension HomeViewController: UICollectionViewDataSource {
             header.configureWithCategories(viewModel.selectedCategory.value)
             header.categorySelected = { [weak self] category in
                 // selectedCategory에 선택된 카테고리 업데이트
-                self?.viewModel.selectedCategory.accept(category)
+                UIView.transition(with: collectionView, duration: 0.25, options: .transitionCrossDissolve, animations: { [weak self] in
+                    self?.viewModel.selectedCategory.accept(category)
+                })
             }
         }
         
