@@ -12,7 +12,6 @@ final class CarouselCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -54,6 +53,7 @@ final class CarouselCell: UICollectionViewCell {
     }
     
     private func setupConstraints() {
+        self.clipsToBounds = true
         self.layer.cornerRadius = 28
         
         imageView.snp.makeConstraints {
