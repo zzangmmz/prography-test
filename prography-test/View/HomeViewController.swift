@@ -43,6 +43,7 @@ final class HomeViewController: UIViewController {
         setupUI()
         setupCollectionView()
         setupConstraints()
+        addSwipeGestures()
         bind()
         fetchMovies()
     }
@@ -284,5 +285,36 @@ extension HomeViewController: UICollectionViewDataSource {
         }
         
         return header
+    }
+}
+
+extension HomeViewController {
+    private func addSwipeGestures() {
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        leftSwipe.direction = .left
+        
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        rightSwipe.direction = .right
+        
+        view.addGestureRecognizer(leftSwipe)
+        view.addGestureRecognizer(rightSwipe)
+    }
+    
+    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+        let categories: [MovieCategory] = [.nowPlaying, .popular, .topRated]
+        guard let currentIndex = categories.firstIndex(of: viewModel.selectedCategory.value) else { return }
+        
+        var newIndex: Int
+        switch gesture.direction {
+        case .left:
+            newIndex = min(currentIndex + 1, categories.count - 1)
+        case .right:
+            newIndex = max(currentIndex - 1, 0)
+        default:
+            return
+        }
+        
+        let newCategory = categories[newIndex]
+        viewModel.selectedCategory.accept(newCategory)
     }
 }
