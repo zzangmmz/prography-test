@@ -11,7 +11,7 @@ import RxMoya
 import RxSwift
 
 protocol MovieRepositoryProtocol {
-    func fetchMovies(of endPoint: MovieAPI) -> Single<MovieResponse>
+    func fetchMovies(of category: MovieCategory, page: Int) -> Single<MovieResponse>
     func fetchMovieDetail(id: Int) -> Single<Movie>
     func fetchMoviePoster(path: String) -> Single<URL>
 }
@@ -23,8 +23,19 @@ final class MovieRepository: MovieRepositoryProtocol {
         self.provider = provider
     }
     
-    func fetchMovies(of endPoint: MovieAPI) -> Single<MovieResponse> {
-        provider.rx.request(endPoint)
+    func fetchMovies(of category: MovieCategory, page: Int = 1) -> Single<MovieResponse> {
+        let endpoint: MovieAPI
+        
+        switch category {
+        case .nowPlaying:
+            endpoint = .nowPlaying(page: page)
+        case .popular:
+            endpoint = .popular(page: page)
+        case .topRated:
+            endpoint = .topRated(page: page)
+        }
+        
+        return provider.rx.request(endpoint)
             .map(MovieResponse.self)
     }
     
