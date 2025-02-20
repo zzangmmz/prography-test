@@ -19,7 +19,7 @@ final class CategoryView: UICollectionView {
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPrefetchingEnabled = false
-        collectionView.register(CarouselViewCell.self, forCellWithReuseIdentifier: String(describing: CarouselViewCell.self))
+        collectionView.register(CategoryViewCell.self, forCellWithReuseIdentifier: String(describing: CategoryViewCell.self))
         
         return collectionView
     }()
