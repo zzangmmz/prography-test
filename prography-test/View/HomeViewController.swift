@@ -8,13 +8,20 @@
 import UIKit
 
 private enum Section: Int {
-    case mainCarousel
-    case movieTable
+    case carousel
+    case nowPlaying
+    case popular
+    case topRated
 }
 
 final class HomeViewController: UIViewController {
     private var viewModel: HomeViewModel
-    private var carouselView = CarouselView()
+    private var collectionView: UICollectionView
+    private var selectedCategory: MovieCategory = .nowPlaying {
+        didSet {
+            collectionView.reloadSections([0])
+        }
+    }
     
     init(viewModel: HomeViewModel = HomeViewModel()) {
         self.viewModel = viewModel
@@ -57,17 +64,5 @@ final class HomeViewController: UIViewController {
         ].forEach {
             view.addSubview($0)
         }
-    }
-}
-
-extension HomeViewController {
-    private func showAlert(title: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: nil,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "확인", style: .destructive))
-        present(alert, animated: true)
     }
 }
