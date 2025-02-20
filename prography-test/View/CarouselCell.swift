@@ -28,6 +28,7 @@ final class CarouselCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 11, weight: .semibold)
         label.textColor = .white
         label.textAlignment = .left
+        label.numberOfLines = 1
         return label
     }()
     
@@ -67,7 +68,7 @@ final class CarouselCell: UICollectionViewCell {
         
         titleLabel.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
-            $0.bottom.equalTo(overviewLabel.snp.top).offset(4)
+            $0.bottom.equalTo(overviewLabel.snp.top).offset(-8)
         }
     }
     
