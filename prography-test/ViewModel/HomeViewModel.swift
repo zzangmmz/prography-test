@@ -52,6 +52,17 @@ final class HomeViewModel {
     }
     
     func fetchTopRatedMovies() {
-        
+        movieRepository.fetchMovies(of: .topRated)
+            .map { $0.results }
+            .subscribe(
+                onSuccess: { [weak self] movies in
+                    self?.topRatedMovies.accept(movies)
+                },
+                onFailure: { error in
+                    print("🚨 topRated 불러오기 오류:")
+                    print(error)
+                }
+            )
+            .disposed(by: disposeBag)
     }
 }
