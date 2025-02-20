@@ -19,14 +19,14 @@ final class MovieCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.font = UIFont(name: "Pretendard-Bold", size: 22)
         label.textColor = .black
         return label
     }()
     
     private let overViewLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = UIFont(name: "Pretendard-Medium", size: 16)
         label.textColor = .onSurfaceVariant
         label.numberOfLines = 2
         label.setLineSpacing(6)
@@ -35,7 +35,7 @@ final class MovieCell: UICollectionViewCell {
     
     private let rateLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         label.textColor = .onSurfaceVariant
         return label
     }()
@@ -109,7 +109,7 @@ final class MovieCell: UICollectionViewCell {
     private func createGenreTagLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.font = .systemFont(ofSize: 11, weight: .semibold)
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 11)
         label.textColor = .onSurfaceVariant
         label.layer.cornerRadius = 8
         label.layer.borderWidth = 1

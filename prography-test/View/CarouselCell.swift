@@ -17,7 +17,7 @@ final class CarouselCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: "Pretendard-Bold", size: 16)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -25,7 +25,7 @@ final class CarouselCell: UICollectionViewCell {
     
     private let overviewLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 11, weight: .semibold)
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 11)
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 1

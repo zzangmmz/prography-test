@@ -43,7 +43,7 @@ final class SectionHeaderView: UICollectionReusableView {
         categories.forEach { category in
             let button = UIButton()
             button.setTitle(category.title, for: .normal)
-            button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+            button.titleLabel?.font = UIFont(name: "Pretendard-Bold", size: 14)
             button.setTitleColor(.onSurfaceVariant, for: .normal)
             button.tag = categories.firstIndex(of: category) ?? 0
             button.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
