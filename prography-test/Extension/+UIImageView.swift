@@ -14,10 +14,11 @@ extension UIImageView {
         
         gradientLayer.colors = [
             UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.7).cgColor
+            UIColor.black.withAlphaComponent(0.3).cgColor,
+            UIColor.black.withAlphaComponent(0.9).cgColor
         ]
         
-        gradientLayer.locations = [0.5, 1.0]
+        gradientLayer.locations = [0.4, 0.7, 1.0]
         
         clipsToBounds = false
         
