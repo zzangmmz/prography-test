@@ -315,6 +315,9 @@ extension HomeViewController {
         }
         
         let newCategory = categories[newIndex]
-        viewModel.selectedCategory.accept(newCategory)
+        
+        UIView.transition(with: collectionView, duration: 0.25, options: .transitionCrossDissolve, animations: { [weak self] in
+            self?.viewModel.selectedCategory.accept(newCategory)
+        })
     }
 }
