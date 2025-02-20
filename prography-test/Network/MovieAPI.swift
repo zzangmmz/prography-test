@@ -43,7 +43,7 @@ extension MovieAPI: TargetType {
         case .movie(let id):
             return "/\(id)"
         case .poster(let path):
-            return "/\(path)"
+            return "\(path)"
         }
     }
     
