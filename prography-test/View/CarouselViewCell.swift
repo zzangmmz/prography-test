@@ -72,7 +72,7 @@ final class CarouselViewCell: UICollectionViewCell {
     }
     
     func configure(with movie: Movie) {
-        self.imageView.kf.setImage(with: URL(string: movie.poster))
+        self.imageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster!)"))
         self.titleLabel.text = movie.title
         self.overviewLabel.text = movie.overview
     }
