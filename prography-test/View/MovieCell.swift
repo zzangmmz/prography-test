@@ -20,20 +20,23 @@ final class MovieCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.textColor = .black
         return label
     }()
     
     private let overViewLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .onSurfaceVariant
         label.numberOfLines = 2
+        label.setLineSpacing(6)
         return label
     }()
     
     private let rateLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .semibold)
-        label.textColor = .systemGray
+        label.textColor = .onSurfaceVariant
         return label
     }()
     
@@ -47,7 +50,7 @@ final class MovieCell: UICollectionViewCell {
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, overViewLabel, rateLabel, genreStackView])
         stackView.axis = .vertical
-        stackView.spacing = 4
+        stackView.spacing = 8
         stackView.alignment = .leading
         return stackView
     }()
@@ -106,7 +109,7 @@ final class MovieCell: UICollectionViewCell {
         let label = UILabel()
         label.text = text
         label.font = .systemFont(ofSize: 11, weight: .semibold)
-        label.textColor = .systemGray
+        label.textColor = .onSurfaceVariant
         label.layer.cornerRadius = 8
         label.layer.borderWidth = 1
         label.layer.borderColor = UIColor.highlightRed.cgColor
