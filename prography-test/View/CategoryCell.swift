@@ -1,5 +1,5 @@
 //
-//  CategoryViewCell.swift
+//  CategoryCell.swift
 //  prography-test
 //
 //  Created by 이명지 on 2/20/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoryViewCell: UICollectionViewCell {
+final class CategoryCell: UICollectionViewCell {
     private let title: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .bold)

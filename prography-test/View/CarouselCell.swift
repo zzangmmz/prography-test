@@ -1,5 +1,5 @@
 //
-//  CarouselViewCell.swift
+//  CarouselCell.swift
 //  prography-test
 //
 //  Created by 이명지 on 2/20/25.
@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class CarouselViewCell: UICollectionViewCell {
+final class CarouselCell: UICollectionViewCell {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
