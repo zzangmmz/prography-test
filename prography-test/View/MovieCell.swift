@@ -48,7 +48,7 @@ final class MovieCell: UICollectionViewCell {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, overViewLabel, rateLabel, genreStackView])
         stackView.axis = .vertical
         stackView.spacing = 4
-        stackView.distribution = .equalCentering
+        stackView.alignment = .leading
         return stackView
     }()
     
@@ -76,12 +76,13 @@ final class MovieCell: UICollectionViewCell {
         posterImageView.snp.makeConstraints {
             $0.height.equalToSuperview()
             $0.width.equalTo(120)
+            $0.leading.equalToSuperview()
         }
         
         contentStackView.snp.makeConstraints {
-            $0.height.equalToSuperview()
             $0.leading.equalTo(posterImageView.snp.trailing).offset(16)
             $0.trailing.equalToSuperview()
+            $0.centerY.equalToSuperview()
         }
     }
     
@@ -94,6 +95,9 @@ final class MovieCell: UICollectionViewCell {
         self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         movie.genres.forEach {
             let genreTagLabel = createGenreTagLabel(text: String($0))
+            genreTagLabel.snp.makeConstraints {
+                $0.size.equalTo(CGSize(width: 40, height: 16))
+            }
             genreStackView.addArrangedSubview(genreTagLabel)
         }
     }
@@ -105,7 +109,7 @@ final class MovieCell: UICollectionViewCell {
         label.textColor = .systemGray
         label.layer.cornerRadius = 8
         label.layer.borderWidth = 1
-        label.layer.borderColor = UIColor.onSurfaceVariant.cgColor
+        label.layer.borderColor = UIColor.highlightRed.cgColor
         label.textAlignment = .center
         return label
     }
