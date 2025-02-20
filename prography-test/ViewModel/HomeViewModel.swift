@@ -22,7 +22,18 @@ final class HomeViewModel {
     }
     
     func fetchNowPlayingMovies() {
-        
+        movieRepository.fetchMovies(of: .nowPlaying)
+            .map { $0.results }
+            .subscribe(
+                onSuccess: { [weak self] movies in
+                    self?.nowPlayingMovies.accept(movies)
+                },
+                onFailure: { error in
+                    print("🚨 now playing 불러오기 오류:")
+                    print(error)
+                }
+            )
+            .disposed(by: disposeBag)
     }
     
     func fetchPopularMovies() {
