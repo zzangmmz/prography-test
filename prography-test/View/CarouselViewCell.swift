@@ -49,7 +49,7 @@ final class CarouselViewCell: UICollectionViewCell {
             titleLabel,
             overviewLabel
         ].forEach {
-            addSubview($0)
+            contentView.addSubview($0)
         }
     }
     
