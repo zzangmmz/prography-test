@@ -36,8 +36,8 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavigationBar()
+        setupUI()
         setupSubviews()
-        //        bind()
     }
     
     private func setupNavigationBar() {
@@ -58,9 +58,13 @@ final class HomeViewController: UIViewController {
         navigationItem.titleView = imageView
     }
     
+    private func setupUI() {
+        view.backgroundColor = .white
+    }
+    
     private func setupSubviews() {
         [
-            carouselView
+            
         ].forEach {
             view.addSubview($0)
         }
