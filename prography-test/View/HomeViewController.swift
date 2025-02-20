@@ -84,6 +84,7 @@ final class HomeViewController: UIViewController {
         
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
+        collectionView.backgroundColor = .white
     }
     
     private func setupConstraints() {
