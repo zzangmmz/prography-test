@@ -113,6 +113,7 @@ final class ReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
+        setupSubviews()
     }
     
     private func setupNavigationBar() {
@@ -136,5 +137,28 @@ final class ReviewViewController: UIViewController {
         navigationItem.titleView = imageView
         
         navigationItem.rightBarButtonItem?.image = UIImage(named: "eclipse")
+    }
+    
+    private func setupSubviews() {
+        [
+            commentLabel,
+            dateLabel
+        ].forEach {
+            commentView.addSubview($0)
+        }
+        
+        [
+            posterView,
+            rateView,
+            titleLabel,
+            rateLabel,
+            genreStackView,
+            overviewLabel,
+            commentTitleLabel,
+            commentView,
+            commentTextField
+        ].forEach {
+            view.addSubview($0)
+        }
     }
 }
