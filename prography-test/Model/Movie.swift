@@ -6,9 +6,17 @@
 //
 
 struct MovieResponse: Decodable {
-    let dates: DateRange
+    let dates: DateRange?
     let page: Int
     let results: [Movie]
+    let totalPages: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case dates
+        case page
+        case results
+        case totalPages = "total_pages"
+    }
 }
 
 struct DateRange: Decodable {
@@ -20,10 +28,10 @@ struct Movie: Decodable {
     let id: Int
     let title: String
     let originalTitle: String
-    let poster: String
+    let poster: String?
     let overview: String
     let rate: Double
-    let genres: [String]
+    let genres: [Int]
     
     enum CodingKeys: String, CodingKey {
         case id

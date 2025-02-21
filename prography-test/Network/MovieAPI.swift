@@ -9,9 +9,9 @@ import Moya
 import Foundation
 
 enum MovieAPI {
-    case nowPlaying
-    case popular
-    case topRated
+    case nowPlaying(page: Int)
+    case popular(page: Int)
+    case topRated(page: Int)
     case movie(id: Int)
     case poster(path: String)
 }
@@ -43,7 +43,7 @@ extension MovieAPI: TargetType {
         case .movie(let id):
             return "/\(id)"
         case .poster(let path):
-            return "/\(path)"
+            return "\(path)"
         }
     }
     
@@ -53,10 +53,15 @@ extension MovieAPI: TargetType {
     
     var task: Moya.Task {
         switch self {
-        case .nowPlaying, .popular, .topRated, .movie:
+        case .nowPlaying(let page), .popular(let page), .topRated(let page):
             let parameters: [String: Any] = [
                 "language": "ko-KR",
-                "page": 1
+                "page": page
+            ]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .movie:
+            let parameters: [String: Any] = [
+                "language": "ko-KR"
             ]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .poster:
