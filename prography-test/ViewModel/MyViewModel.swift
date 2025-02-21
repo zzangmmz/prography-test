@@ -33,6 +33,7 @@ final class MyViewModel {
                 Review(
                     movieID: Int(entity.movieID),
                     movieTitle: entity.movieTitle,
+                    poster: entity.poster,
                     overview: entity.overview,
                     myRate: Int(entity.myRate),
                     comment: entity.comment ?? "",
