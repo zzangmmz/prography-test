@@ -18,6 +18,7 @@ final class MyViewController: UIViewController {
         let layout = createLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .white
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.register(ReviewCell.self, forCellWithReuseIdentifier: String(describing: ReviewCell.self))
         return collectionView
     }()
