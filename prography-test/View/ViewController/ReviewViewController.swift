@@ -30,6 +30,7 @@ final class ReviewViewController: UIViewController {
         label.textColor = .black
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -39,7 +40,16 @@ final class ReviewViewController: UIViewController {
         label.textColor = .black
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
+    }()
+    
+    private lazy var titleStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, rateLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        stackView.alignment = .bottom
+        return stackView
     }()
     
     private let genreStackView: UIStackView = {
@@ -56,6 +66,13 @@ final class ReviewViewController: UIViewController {
         label.textAlignment = .left
         label.setLineSpacing(6)
         return label
+    }()
+    
+    private lazy var movieStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleStackView, genreStackView,overviewLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        return stackView
     }()
     
     private let commentTitleLabel: UILabel = {
@@ -101,6 +118,13 @@ final class ReviewViewController: UIViewController {
         return textField
     }()
     
+    private lazy var commentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [commentTitleLabel, commentView, commentTextField])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        return stackView
+    }()
+    
     init(movieID: Int) {
         self.movieID = movieID
         super.init(nibName: nil, bundle: nil)
@@ -114,6 +138,7 @@ final class ReviewViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupSubviews()
+        setupConstraints()
     }
     
     private func setupNavigationBar() {
@@ -150,15 +175,40 @@ final class ReviewViewController: UIViewController {
         [
             posterView,
             rateView,
-            titleLabel,
-            rateLabel,
-            genreStackView,
-            overviewLabel,
-            commentTitleLabel,
-            commentView,
-            commentTextField
+            movieStackView,
+            commentStackView
         ].forEach {
             view.addSubview($0)
+        }
+    }
+    
+    private func setupConstraints() {
+        posterView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.height.greaterThanOrEqualTo(247)
+        }
+        
+        rateView.snp.makeConstraints {
+            $0.top.equalTo(posterView.snp.bottom)
+            $0.height.equalTo(60)
+            $0.centerX.equalToSuperview()
+        }
+        
+        titleStackView.snp.makeConstraints {
+            $0.height.equalTo(44)
+        }
+        
+        movieStackView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(16)
+            $0.top.equalTo(rateView.snp.bottom).offset(16)
+            $0.height.lessThanOrEqualTo(300)
+        }
+        
+        commentStackView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(16)
+            $0.top.equalTo(movieStackView.snp.bottom).offset(16)
+            $0.height.greaterThanOrEqualTo(130)
         }
     }
 }
