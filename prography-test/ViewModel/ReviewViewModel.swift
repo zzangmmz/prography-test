@@ -25,5 +25,45 @@ final class ReviewViewModel {
         self.movieID = movieID
         self.movieRepository = movieRepository
         
+        fetchMovieData()
+        fetchUserReview()
+    }
+    
+    // MARK: - TMDB API
+    private func fetchMovieData() {
+        movieRepository.fetchMovieDetail(id: movieID)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] movie in
+                    self?.movie.accept(movie)
+                },
+                onFailure: { [weak self] error in
+                    self?.error.accept(error)
+                }
+            )
+            .disposed(by: disposeBag)
+    }
+    
+    // MARK: - CoreData
+    private func fetchUserReview() {
+        let request: NSFetchRequest<ReviewEntity> = ReviewEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "movieID == %d", movieID)
+        
+        do {
+            if let reviewEntity = try context.fetch(request).first {
+                let review = Review(
+                    movieID: Int(reviewEntity.movieID),
+                    movieTitle: reviewEntity.movieTitle,
+                    poster: reviewEntity.poster,
+                    overview: reviewEntity.overview,
+                    myRate: Int(reviewEntity.myRate),
+                    comment: reviewEntity.comment ?? "",
+                    savedDate: reviewEntity.savedDate
+                )
+                userReview.accept(review)
+            }
+        } catch {
+            self.error.accept(error)
+        }
     }
 }
