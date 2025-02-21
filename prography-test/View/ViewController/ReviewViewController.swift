@@ -14,6 +14,93 @@ final class ReviewViewController: UIViewController {
     private var movieID: Int
     private var review: Review?
     
+    private let posterView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .clear
+        return imageView
+    }()
+    
+    private let rateView = RateView()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-Bold", size: 40)
+        label.textColor = .black
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let rateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+        label.textColor = .black
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let genreStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        return stackView
+    }()
+    
+    private let overviewLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-Regular", size: 16)
+        label.textColor = .onSurfaceVariant
+        label.textAlignment = .left
+        label.setLineSpacing(6)
+        return label
+    }()
+    
+    private let commentTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Comment"
+        label.font = UIFont(name: "Pretendard-Bold", size: 16)
+        label.textColor = .black
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let commentView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 8
+        view.layer.backgroundColor = UIColor.commentPink.cgColor
+        return view
+    }()
+    
+    private let commentLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-Medium", size: 16)
+        label.textColor = .default
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-Regular", size: 11)
+        label.textColor = .default
+        label.textAlignment = .right
+        return label
+    }()
+    
+    private let commentTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "후기를 작성해주세요."
+        textField.textColor = UIColor.teriary
+        textField.font = UIFont(name: "Pretendard-Medium", size: 16)
+        textField.layer.cornerRadius = 8
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.highlightRed.cgColor
+        return textField
+    }()
+    
     init(movieID: Int) {
         self.movieID = movieID
         super.init(nibName: nil, bundle: nil)
