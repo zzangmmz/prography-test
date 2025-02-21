@@ -150,10 +150,14 @@ final class MyViewController: UIViewController {
 extension MyViewController {
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 121, height: 240)
-        layout.minimumLineSpacing = 16
-        layout.minimumInteritemSpacing = 16
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        
+        let spacing: CGFloat = 8
+        let availableWidth = UIScreen.main.bounds.width - spacing * 4
+        let itemWidth = (availableWidth - spacing * 2) / 3  // 남은 공간 3등분
+        
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth * 2) // 높이 = 너비*2
+        layout.minimumLineSpacing = spacing * 2
+        layout.minimumInteritemSpacing = spacing
         return layout
     }
 }
