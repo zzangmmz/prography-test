@@ -9,7 +9,9 @@ import Foundation
 
 struct Review {
     let movieID: Int
-    let rate: Int
+    let movieTitle: String
+    let overview: String
+    let myRate: Int
     let comment: String
     let savedDate: Date
 }
