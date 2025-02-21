@@ -10,6 +10,7 @@ import Foundation
 struct Review {
     let movieID: Int
     let movieTitle: String
+    let poster: String
     let overview: String
     let myRate: Int
     let comment: String
