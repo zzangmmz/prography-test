@@ -8,17 +8,28 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 
 final class ReviewViewController: UIViewController {
     private var movieID: Int
-    private var review: Review?
-    
     private let viewModel: ReviewViewModel
     private var disposeBag = DisposeBag()
+    private var isPlaceholderShowing = true
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     private let posterView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.backgroundColor = .clear
         return imageView
@@ -28,7 +39,7 @@ final class ReviewViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Bold", size: 40)
+        label.font = UIFont(name: "Pretendard-Bold", size: 30)
         label.textColor = .black
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -63,17 +74,31 @@ final class ReviewViewController: UIViewController {
     
     private let overviewLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Regular", size: 16)
         label.textColor = .onSurfaceVariant
         label.textAlignment = .left
-        label.setLineSpacing(6)
+        label.numberOfLines = 0
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 24
+        
+        let attributedString = NSAttributedString(
+            string: "",
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont(name: "Pretendard-Regular", size: 16),
+                .foregroundColor: UIColor.onSurfaceVariant
+            ]
+        )
+        
+        label.attributedText = attributedString
         return label
     }()
     
     private lazy var movieStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleStackView, genreStackView,overviewLabel])
+        let stackView = UIStackView(arrangedSubviews: [titleStackView, genreStackView, overviewLabel])
         stackView.axis = .vertical
         stackView.spacing = 8
+        stackView.alignment = .leading
         return stackView
     }()
     
@@ -86,22 +111,52 @@ final class ReviewViewController: UIViewController {
         return label
     }()
     
-    private let commentView: UIView = {
+    private let reviewContainerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 8
-        view.layer.backgroundColor = UIColor.commentPink.cgColor
+        view.backgroundColor = .clear
         return view
     }()
     
-    private let commentLabel: UILabel = {
+    private let existingReviewView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 8
+        view.backgroundColor = .commentPink
+        view.isHidden = true
+        return view
+    }()
+    
+    private let reviewTextView: UITextView = {
+        let textView = UITextView()
+        textView.font = UIFont(name: "Pretendard-Medium", size: 16)
+        textView.textColor = .teriary
+        textView.layer.cornerRadius = 8
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.highlightRed.cgColor
+        textView.isHidden = true
+        textView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        textView.isScrollEnabled = true
+        textView.backgroundColor = .clear
+        return textView
+    }()
+    
+    private let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Medium", size: 16)
-        label.textColor = .default
-        label.textAlignment = .left
+        label.text = "후기를 작성해주세요."
+        label.font = UIFont(name: "Pretendard-Regular", size: 16)
+        label.textColor = .teriary
+        label.backgroundColor = .clear
         return label
     }()
     
-    private let dateLabel: UILabel = {
+    private let reviewLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Pretendard-Medium", size: 16)
+        label.textColor = .default
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    private let reviewedDateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Pretendard-Regular", size: 11)
         label.textColor = .default
@@ -109,19 +164,8 @@ final class ReviewViewController: UIViewController {
         return label
     }()
     
-    private let commentTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "후기를 작성해주세요."
-        textField.textColor = UIColor.teriary
-        textField.font = UIFont(name: "Pretendard-Medium", size: 16)
-        textField.layer.cornerRadius = 8
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.highlightRed.cgColor
-        return textField
-    }()
-    
     private lazy var commentStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [commentTitleLabel, commentView, commentTextField])
+        let stackView = UIStackView(arrangedSubviews: [commentTitleLabel, reviewContainerView])
         stackView.axis = .vertical
         stackView.spacing = 8
         return stackView
@@ -140,16 +184,28 @@ final class ReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
-        setupSubviews()
+        setupUI()
         setupConstraints()
-        setupCommentView()
-        bind()
+        bindViewModel()
+        setupTextView()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        posterView.addGradientShadow(
+            alpha: 0.1,
+            location: 0.7,
+            spacing: 0.15
+        )
+    }
+    
+    // MARK: - Setup
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.shadowColor = .clear
+        
+        appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
         
         let backButtonImage = UIImage(named: "NavigationButton")?.withRenderingMode(.alwaysOriginal)
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
@@ -159,39 +215,57 @@ final class ReviewViewController: UIViewController {
         
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 144, height: 24))
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "logo")
-        
-        let resizedImage = imageView.image?.withRenderingMode(.alwaysOriginal)
-        imageView.image = resizedImage
-        
+        imageView.image = UIImage(named: "logo")?.withRenderingMode(.alwaysOriginal)
         navigationItem.titleView = imageView
-        
-        navigationItem.rightBarButtonItem?.image = UIImage(named: "eclipse")
     }
     
-    private func setupSubviews() {
-        [
-            commentLabel,
-            dateLabel
-        ].forEach {
-            commentView.addSubview($0)
-        }
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
         [
             posterView,
             rateView,
             movieStackView,
             commentStackView
+        ].forEach { contentView.addSubview($0) }
+        
+        [
+            existingReviewView,
+            reviewTextView,
+            placeholderLabel
         ].forEach {
-            view.addSubview($0)
+            reviewContainerView.addSubview($0)
         }
+        
+        [
+            reviewLabel,
+            reviewedDateLabel
+        ].forEach {
+            existingReviewView.addSubview($0)
+        }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        scrollView.addGestureRecognizer(tapGesture)
     }
     
     private func setupConstraints() {
+        scrollView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+        }
+        
         posterView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.height.greaterThanOrEqualTo(247)
+            $0.top.equalToSuperview()
+            $0.height.lessThanOrEqualTo(247)
         }
         
         rateView.snp.makeConstraints {
@@ -206,60 +280,82 @@ final class ReviewViewController: UIViewController {
         
         movieStackView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
-            $0.top.equalTo(rateView.snp.bottom).offset(16)
+            $0.top.equalTo(rateView.snp.bottom)
             $0.height.lessThanOrEqualTo(300)
         }
         
         commentStackView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(movieStackView.snp.bottom).offset(16)
-            $0.height.greaterThanOrEqualTo(130)
+            $0.bottom.equalToSuperview().offset(-16)
+        }
+        
+        reviewContainerView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalTo(80)
+        }
+        
+        existingReviewView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalTo(80)
+        }
+        
+        reviewTextView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalTo(80)
+        }
+        
+        placeholderLabel.snp.makeConstraints {
+            $0.leading.equalTo(reviewTextView).offset(16)
+            $0.top.equalTo(reviewTextView.snp.top).offset(16)
+            $0.horizontalEdges.equalTo(placeholderLabel).inset(4)
+        }
+        
+        reviewLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(16)
+        }
+        
+        reviewedDateLabel.snp.makeConstraints {
+            $0.trailing.bottom.equalToSuperview().inset(8)
         }
     }
     
-    private func setupCommentView() {
-        if viewModel.userReview.value == nil {
-            commentLabel.isHidden = true
-            dateLabel.isHidden = true
-            
-            commentTextField.isHidden = false
-        } else {
-            commentLabel.isHidden = false
-            dateLabel.isHidden = false
-            
-            commentTextField.isHidden = true
-        }
+    private func setupTextView() {
+        reviewTextView.delegate = self
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
+        toolbar.items = [flexSpace, doneButton]
+        reviewTextView.inputAccessoryView = toolbar
     }
     
-    private func bind() {
-        // 영화 데이터 불러오기
-        viewModel.movie
+    private func bindViewModel() {
+        viewModel.movieDetail
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] movie in
                 guard let movie = movie else { return }
-                self?.updateUI(with: movie)
+                self?.updateMovieUI(with: movie)
             })
             .disposed(by: disposeBag)
         
-        // 리뷰 데이터 불러오기
         viewModel.userReview
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] review in
-                if let review = review {
-                    self?.updateReviewUI(with: review)
-                }
+                self?.updateReviewUI(with: review)
             })
             .disposed(by: disposeBag)
     }
     
-    private func updateUI(with movie: Movie) {
+    private func updateMovieUI(with movie: MovieDetail) {
         titleLabel.text = movie.title
         overviewLabel.text = movie.overview
         posterView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster)"))
         
         genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         movie.genres.forEach {
-            let genreName = Genre.getGenreName(for: $0)
+            let genreName = Genre.getGenreName(for: $0.id)
             let genreTagLabel = createGenreTagLabel(text: genreName)
             genreTagLabel.snp.makeConstraints {
                 $0.size.equalTo(CGSize(width: 40, height: 16))
@@ -268,10 +364,25 @@ final class ReviewViewController: UIViewController {
         }
     }
     
-    private func updateReviewUI(with review: Review) {
-        rateView.setRateValue(review.myRate)
-        commentLabel.text = review.comment
-        dateLabel.text = String(describing: review.savedDate)
+    private func updateReviewUI(with review: Review?) {
+        rateView.setRateValue(review?.myRate ?? 0)
+        
+        if let review = review, let comment = review.comment, !comment.isEmpty {
+            existingReviewView.isHidden = false
+            reviewTextView.isHidden = true
+            placeholderLabel.isHidden = true
+            
+            reviewLabel.text = comment
+            if let date = review.savedDate {
+                reviewedDateLabel.text = DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none)
+            }
+        } else {
+            existingReviewView.isHidden = true
+            reviewTextView.isHidden = false
+            placeholderLabel.isHidden = false
+            reviewTextView.text = nil
+            isPlaceholderShowing = true
+        }
     }
     
     private func createGenreTagLabel(text: String) -> UILabel {
@@ -284,5 +395,32 @@ final class ReviewViewController: UIViewController {
         label.layer.borderColor = UIColor.highlightRed.cgColor
         label.textAlignment = .center
         return label
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+extension ReviewViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        placeholderLabel.isHidden = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        placeholderLabel.textColor = .teriary
+        if textView.text.isEmpty {
+            isPlaceholderShowing = true
+        }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.isEmpty && !isPlaceholderShowing {
+            placeholderLabel.isHidden = false
+            isPlaceholderShowing = true
+        } else if !textView.text.isEmpty && isPlaceholderShowing {
+            placeholderLabel.isHidden = true
+            isPlaceholderShowing = false
+        }
     }
 }
