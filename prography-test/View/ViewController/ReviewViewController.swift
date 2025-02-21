@@ -142,6 +142,7 @@ final class ReviewViewController: UIViewController {
         setupNavigationBar()
         setupSubviews()
         setupConstraints()
+        setupCommentView()
     }
     
     private func setupNavigationBar() {
@@ -212,6 +213,20 @@ final class ReviewViewController: UIViewController {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(movieStackView.snp.bottom).offset(16)
             $0.height.greaterThanOrEqualTo(130)
+        }
+    }
+    
+    private func setupCommentView() {
+        if viewModel.userReview.value == nil {
+            commentLabel.isHidden = true
+            dateLabel.isHidden = true
+            
+            commentTextField.isHidden = false
+        } else {
+            commentLabel.isHidden = false
+            dateLabel.isHidden = false
+            
+            commentTextField.isHidden = true
         }
     }
 }
