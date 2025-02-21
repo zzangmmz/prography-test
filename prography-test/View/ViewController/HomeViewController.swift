@@ -216,6 +216,14 @@ extension HomeViewController: UICollectionViewDelegate {
             viewModel.loadMoreMovies()
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movies = getMoviesForCurrentCategory()
+        let selectedMovie = movies[indexPath.item]
+        
+        let reviewViewController = ReviewViewController(movieID: selectedMovie.id)
+        self.navigationController?.pushViewController(reviewViewController, animated: true)
+    }
 }
 
 extension HomeViewController: UICollectionViewDataSource {
