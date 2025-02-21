@@ -29,8 +29,9 @@ TMDB API를 활용한 영화 리뷰 iOS 애플리케이션입니다.
 ---
 ## 💫 주요 기능
 ### 카테고리별 영화 목록 보기
-
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/ffa5b630-77bb-41a5-bfc3-9cb482c809d1">
+| Now Playing | Popular | Top Rated |
+| --- | --- | --- |
+| <img width="300" alt="image" src="https://github.com/user-attachments/assets/ffa5b630-77bb-41a5-bfc3-9cb482c809d1"> | <img width="300" alt="image" src="https://github.com/user-attachments/assets/322d5a58-2a16-439b-9b17-bc144a69c6cc"> | <img width="300" alt="image" src="https://github.com/user-attachments/assets/6d0ac00d-acf9-40f2-b3ff-7c1b07e71b3e">|
 
 - 현재 상영작 Now Playing, 인기 영화 Popular, 평점 높은순 Top Rated 카테고리에 해당하는 영화 목록을 확인할 수 있습니다.
 - 무한스크롤로 더 많은 영화를 구경할 수 있습니다.
