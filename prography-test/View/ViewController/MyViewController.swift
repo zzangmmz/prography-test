@@ -30,7 +30,9 @@ final class MyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupNavigationBar()
+        setupSubviews()
+        setupConstraints()
     }
     
     init() {
@@ -42,8 +44,27 @@ final class MyViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.shadowColor = .clear
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 144, height: 24))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "logo")
+        
+        let resizedImage = imageView.image?.withRenderingMode(.alwaysOriginal)
+        imageView.image = resizedImage
+        
+        navigationItem.titleView = imageView
+    }
+    
     private func setupSubviews() {
         [
+            filterButton,
             collectionView
         ].forEach {
             view.addSubview($0)
@@ -51,7 +72,17 @@ final class MyViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        filterButton.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(16)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.height.equalTo(64)
+        }
         
+        collectionView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(16)
+            $0.top.equalTo(filterButton.snp.bottom).offset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
+        }
     }
 }
 
