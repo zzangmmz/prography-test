@@ -16,10 +16,11 @@ final class ReviewViewModel {
     private let context = CoreDataManager.shared.context
     
     let movieID: Int
-    
-    let movie = BehaviorRelay<Movie?>(value: nil)
+    let movieDetail = BehaviorRelay<MovieDetail?>(value: nil)
     let userReview = BehaviorRelay<Review?>(value: nil)
     let error = PublishRelay<Error>()
+    
+    let reviewStateChanged = PublishRelay<Void>()
     
     init(movieID: Int, movieRepository: MovieRepositoryProtocol = MovieRepository()) {
         self.movieID = movieID
@@ -27,6 +28,16 @@ final class ReviewViewModel {
         
         fetchMovieData()
         fetchUserReview()
+        setupReviewStateBinding()
+    }
+    
+    private func setupReviewStateBinding() {
+        reviewStateChanged
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.fetchUserReview()
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: - TMDB API
@@ -35,7 +46,7 @@ final class ReviewViewModel {
             .observe(on: MainScheduler.instance)
             .subscribe(
                 onSuccess: { [weak self] movie in
-                    self?.movie.accept(movie)
+                    self?.movieDetail.accept(movie)
                 },
                 onFailure: { [weak self] error in
                     self?.error.accept(error)
@@ -45,7 +56,7 @@ final class ReviewViewModel {
     }
     
     // MARK: - CoreData
-    private func fetchUserReview() {
+    func fetchUserReview() {
         let request: NSFetchRequest<ReviewEntity> = ReviewEntity.fetchRequest()
         request.predicate = NSPredicate(format: "movieID == %d", movieID)
         
@@ -57,13 +68,18 @@ final class ReviewViewModel {
                     poster: reviewEntity.poster,
                     overview: reviewEntity.overview,
                     myRate: Int(reviewEntity.myRate),
-                    comment: reviewEntity.comment ?? "",
+                    comment: reviewEntity.comment,
                     savedDate: reviewEntity.savedDate
                 )
                 userReview.accept(review)
+            } else {
+                // 리뷰가 없는 경우 nil!!
+                userReview.accept(nil)
             }
         } catch {
             self.error.accept(error)
         }
     }
+    
+    // TODO: - 리뷰 수정/삭제
 }
