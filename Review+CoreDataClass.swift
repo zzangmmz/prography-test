@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(Review)
-public class Review: NSManagedObject {
+@objc(ReviewEntity)
+public class ReviewEntity: NSManagedObject {
 
 }
