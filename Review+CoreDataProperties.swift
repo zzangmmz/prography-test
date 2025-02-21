@@ -17,7 +17,9 @@ extension ReviewEntity {
     }
 
     @NSManaged public var movieID: Int64
-    @NSManaged public var rate: Int64
+    @NSManaged public var movieTitle: String
+    @NSManaged public var myRate: Int64
+    @NSManaged public var overview: String
     @NSManaged public var comment: String?
     @NSManaged public var savedDate: Date
 
