@@ -58,6 +58,11 @@ final class MyViewController: UIViewController {
         bind()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.fetchReviews()
+    }
+    
     init() {
         self.viewModel = MyViewModel()
         super.init(nibName: nil, bundle: nil)
