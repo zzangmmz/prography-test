@@ -22,7 +22,7 @@ final class MyViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var ratesButton: UIButton = {
+    private lazy var filterButton: UIButton = {
         let button = UIButton()
         button.configuration = createConfiguration()
         return button
@@ -84,6 +84,8 @@ extension MyViewController {
         config.background.strokeColor = .highlightRed
         config.background.strokeWidth = 1
         config.background.cornerRadius = 12
+        config.image = UIImage(named: "list")
+        config.imagePlacement = .trailing
         return config
     }
 }
