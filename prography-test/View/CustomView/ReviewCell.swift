@@ -50,18 +50,21 @@ final class ReviewCell: UICollectionViewCell {
         imageView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
             $0.top.equalToSuperview()
-            $0.height.equalToSuperview().multipliedBy(0.6)
+            $0.height.equalTo(180)
         }
         
         titleLabel.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(imageView.snp.bottom).offset(8)
+            $0.height.equalTo(20)
         }
         
         rateView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(titleLabel.snp.bottom).offset(4)
             $0.bottom.equalToSuperview().offset(-8)
+            $0.height.equalTo(16)
+            $0.width.equalTo(100)
+            $0.centerX.equalToSuperview()
         }
     }
     
