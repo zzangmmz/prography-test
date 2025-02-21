@@ -13,7 +13,7 @@ final class CoreDataManager {
     private init() {}
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "prography-test")
+        let container = NSPersistentContainer(name: "prography_test")
         container.loadPersistentStores(completionHandler: { _, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
