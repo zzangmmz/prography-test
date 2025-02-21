@@ -34,7 +34,7 @@ final class CarouselCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView.addGradientShadow()
+        imageView.addGradientShadow(alpha: 0.3, location: 0.4, spacing: 0.3)
     }
     
     override init(frame: CGRect) {
@@ -78,7 +78,7 @@ final class CarouselCell: UICollectionViewCell {
     }
     
     func configure(with movie: Movie) {
-        self.imageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster!)"))
+        self.imageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster)"))
         self.titleLabel.text = movie.title
         self.overviewLabel.text = movie.overview
     }

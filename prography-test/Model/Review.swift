@@ -12,7 +12,7 @@ struct Review {
     let movieTitle: String
     let poster: String
     let overview: String
-    let myRate: Int
-    let comment: String
-    let savedDate: Date
+    let myRate: Int?
+    let comment: String?
+    let savedDate: Date?
 }

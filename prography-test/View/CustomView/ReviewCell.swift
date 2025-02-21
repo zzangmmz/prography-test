@@ -71,6 +71,6 @@ final class ReviewCell: UICollectionViewCell {
     func configure(with review: Review) {
         self.titleLabel.text = review.movieTitle
         self.imageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(review.poster)"))
-        self.rateView.setRateValue(review.myRate)
+        self.rateView.setRateValue(review.myRate ?? 0)
     }
 }

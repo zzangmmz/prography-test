@@ -22,6 +22,7 @@ final class MyViewModel {
     
     init(movieRepository: MovieRepositoryProtocol = MovieRepository()) {
         self.movieRepository = movieRepository
+        테스트데이터()
     }
     
     func fetchReviews() {
@@ -44,5 +45,36 @@ final class MyViewModel {
         } catch {
             print("리뷰 Fetch Failed: \(error.localizedDescription)")
         }
+    }
+}
+
+extension MyViewModel {
+    private func 테스트데이터() {
+        movieRepository.fetchMovies(of: .nowPlaying, page: 1)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] response in
+                    let reviews = response.results.map { movie in
+                        Review(
+                            movieID: movie.id,
+                            movieTitle: movie.title,
+                            poster: movie.poster ?? "",
+                            overview: movie.overview,
+                            myRate: Int.random(in: 1...5),
+                            comment: "테스트 리뷰입니다......",
+                            savedDate: Date()
+                        )
+                    }
+                    self?.reviewsRelay.accept(reviews)
+                },
+                onFailure: { error in
+                    print("🚨 테스트 데이터 불러오기 오류:", error)
+                }
+            )
+            .disposed(by: disposeBag)
+    }
+    
+    func 테스트페치() {
+        테스트데이터()
     }
 }

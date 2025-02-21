@@ -28,7 +28,7 @@ struct Movie: Decodable {
     let id: Int
     let title: String
     let originalTitle: String
-    let poster: String?
+    let poster: String
     let overview: String
     let rate: Double
     let genres: [Int]

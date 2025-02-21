@@ -12,7 +12,7 @@ import RxSwift
 
 protocol MovieRepositoryProtocol {
     func fetchMovies(of category: MovieCategory, page: Int) -> Single<MovieResponse>
-    func fetchMovieDetail(id: Int) -> Single<Movie>
+    func fetchMovieDetail(id: Int) -> Single<MovieDetail>
     func fetchMoviePoster(path: String) -> Single<URL>
 }
 
@@ -39,9 +39,9 @@ final class MovieRepository: MovieRepositoryProtocol {
             .map(MovieResponse.self)
     }
     
-    func fetchMovieDetail(id: Int) -> Single<Movie> {
+    func fetchMovieDetail(id: Int) -> Single<MovieDetail> {
         provider.rx.request(.movie(id: id))
-            .map(Movie.self)
+            .map(MovieDetail.self)
     }
     
     func fetchMoviePoster(path: String) -> Single<URL> {

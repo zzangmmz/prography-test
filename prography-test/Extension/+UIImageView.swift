@@ -8,17 +8,25 @@
 import UIKit
 
 extension UIImageView {
-    func addGradientShadow() {
+    func addGradientShadow(alpha: CGFloat, location: CGFloat, spacing: CGFloat) {
+        let baseAlpha = alpha
+        let baselocation = location
+        let spacing = spacing
+        
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         
         gradientLayer.colors = [
             UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.3).cgColor,
-            UIColor.black.withAlphaComponent(0.9).cgColor
+            UIColor.black.withAlphaComponent(baseAlpha).cgColor,
+            UIColor.black.withAlphaComponent(baseAlpha + spacing * 2).cgColor
         ]
         
-        gradientLayer.locations = [0.4, 0.7, 1.0]
+        gradientLayer.locations = [
+            NSNumber(value: Float(baselocation)),
+            NSNumber(value: Float(baselocation + spacing)),
+            NSNumber(value: Float(baselocation + spacing * 2))
+        ]
         
         clipsToBounds = false
         

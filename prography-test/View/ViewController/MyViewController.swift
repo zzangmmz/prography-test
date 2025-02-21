@@ -52,6 +52,7 @@ final class MyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupNavigationBar()
         setupSubviews()
         setupConstraints()
@@ -60,7 +61,9 @@ final class MyViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.fetchReviews()
+//        viewModel.fetchReviews()
+        // MARK: - 테스트 코드!!!!!!
+        viewModel.테스트페치()
     }
     
     init() {
@@ -129,7 +132,7 @@ final class MyViewController: UIViewController {
         collectionView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(filterView.snp.bottom).offset(16)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -145,8 +148,12 @@ final class MyViewController: UIViewController {
             .disposed(by: disposeBag)
         
         collectionView.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                // 리뷰 뷰컨으로 이동
+            .withLatestFrom(viewModel.reviews) { indexPath, reviews in
+                return reviews[indexPath.item]
+            }
+            .subscribe(onNext: { [weak self] review in
+                let reviewViewController = ReviewViewController(movieID: review.movieID)
+                self?.navigationController?.pushViewController(reviewViewController, animated: true)
             })
             .disposed(by: disposeBag)
     }

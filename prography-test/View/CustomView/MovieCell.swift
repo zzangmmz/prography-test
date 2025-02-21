@@ -90,7 +90,7 @@ final class MovieCell: UICollectionViewCell {
     }
     
     func configure(with movie: Movie) {
-        self.posterImageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster!)"))
+        self.posterImageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster)"))
         self.titleLabel.text = movie.title
         self.overViewLabel.text = movie.overview
         self.rateLabel.text = movie.rate.toOneDecimalString
