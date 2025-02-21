@@ -22,10 +22,31 @@ final class MyViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var filterButton: UIButton = {
+    private var ratesButton: UIButton = {
         let button = UIButton()
-        button.configuration = createConfiguration()
+        button.setTitle("All", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.titleLabel?.font = UIFont(name: "Pretendard-Bold", size: 16)
+        button.backgroundColor = .clear
         return button
+    }()
+    
+    private var listButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "list"), for: .normal)
+        button.tintColor = .onSurfaceVariant
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    private var filterView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.highlightRed.cgColor
+        return view
     }()
     
     override func viewDidLoad() {
@@ -64,7 +85,14 @@ final class MyViewController: UIViewController {
     
     private func setupSubviews() {
         [
-            filterButton,
+            ratesButton,
+            listButton
+        ].forEach {
+            filterView.addSubview($0)
+        }
+        
+        [
+            filterView,
             collectionView
         ].forEach {
             view.addSubview($0)
@@ -72,7 +100,20 @@ final class MyViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        filterButton.snp.makeConstraints {
+        ratesButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerY.equalToSuperview()
+            $0.height.equalTo(40)
+            $0.width.equalToSuperview().multipliedBy(0.3)
+        }
+        
+        listButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-8)
+            $0.centerY.equalToSuperview()
+            $0.size.equalTo(40)
+        }
+        
+        filterView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             $0.height.equalTo(64)
@@ -80,7 +121,7 @@ final class MyViewController: UIViewController {
         
         collectionView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
-            $0.top.equalTo(filterButton.snp.bottom).offset(16)
+            $0.top.equalTo(filterView.snp.bottom).offset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
     }
@@ -98,25 +139,3 @@ extension MyViewController {
     }
 }
 
-// MARK: - Buton Configuration
-extension MyViewController {
-    private func createConfiguration() -> UIButton.Configuration {
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString(
-            "All",
-            attributes: AttributeContainer(
-                [
-                    .font: UIFont(name: "Pretendard-Bold",
-                                  size: 16)!
-                ]
-            ))
-        config.baseBackgroundColor = .clear
-        config.baseForegroundColor = .black
-        config.background.strokeColor = .highlightRed
-        config.background.strokeWidth = 1
-        config.background.cornerRadius = 12
-        config.image = UIImage(named: "list")
-        config.imagePlacement = .trailing
-        return config
-    }
-}
