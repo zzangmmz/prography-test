@@ -8,7 +8,7 @@
 import UIKit
 
 final class RateView: UIView {
-    private var rateValue: Int
+    private(set) var rateValue: Int
     private var isInteractiveMode: Bool
     
     private var stars = [UIButton]()
