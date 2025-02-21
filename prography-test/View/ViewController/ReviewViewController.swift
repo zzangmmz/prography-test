@@ -143,6 +143,7 @@ final class ReviewViewController: UIViewController {
         setupSubviews()
         setupConstraints()
         setupCommentView()
+        bind()
     }
     
     private func setupNavigationBar() {
@@ -228,5 +229,60 @@ final class ReviewViewController: UIViewController {
             
             commentTextField.isHidden = true
         }
+    }
+    
+    private func bind() {
+        // 영화 데이터 불러오기
+        viewModel.movie
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] movie in
+                guard let movie = movie else { return }
+                self?.updateUI(with: movie)
+            })
+            .disposed(by: disposeBag)
+        
+        // 리뷰 데이터 불러오기
+        viewModel.userReview
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] review in
+                if let review = review {
+                    self?.updateReviewUI(with: review)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func updateUI(with movie: Movie) {
+        titleLabel.text = movie.title
+        overviewLabel.text = movie.overview
+        posterView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original\(movie.poster)"))
+        
+        genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        movie.genres.forEach {
+            let genreName = Genre.getGenreName(for: $0)
+            let genreTagLabel = createGenreTagLabel(text: genreName)
+            genreTagLabel.snp.makeConstraints {
+                $0.size.equalTo(CGSize(width: 40, height: 16))
+            }
+            genreStackView.addArrangedSubview(genreTagLabel)
+        }
+    }
+    
+    private func updateReviewUI(with review: Review) {
+        rateView.setRateValue(review.myRate)
+        commentLabel.text = review.comment
+        dateLabel.text = String(describing: review.savedDate)
+    }
+    
+    private func createGenreTagLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 11)
+        label.textColor = .onSurfaceVariant
+        label.layer.cornerRadius = 8
+        label.layer.borderWidth = 1
+        label.layer.borderColor = UIColor.highlightRed.cgColor
+        label.textAlignment = .center
+        return label
     }
 }
