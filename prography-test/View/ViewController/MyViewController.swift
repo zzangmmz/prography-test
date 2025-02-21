@@ -22,6 +22,12 @@ final class MyViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var ratesButton: UIButton = {
+        let button = UIButton()
+        button.configuration = createConfiguration()
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,5 +64,25 @@ extension MyViewController {
         layout.minimumInteritemSpacing = 16
         layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         return layout
+    }
+}
+
+extension MyViewController {
+    private func createConfiguration() -> UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.attributedTitle = AttributedString(
+            "All",
+            attributes: AttributeContainer(
+                [
+                    .font: UIFont(name: "Pretendard-Bold",
+                                  size: 16)!
+                ]
+            ))
+        config.baseBackgroundColor = .clear
+        config.baseForegroundColor = .black
+        config.background.strokeColor = .highlightRed
+        config.background.strokeWidth = 1
+        config.background.cornerRadius = 12
+        return config
     }
 }
