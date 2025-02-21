@@ -6,11 +6,57 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class MyViewController: UIViewController {
+    
+    private let viewModel: MyViewModel
+    private var disposeBag = DisposeBag()
+    
+    private lazy var collectionView: UICollectionView = {
+        let layout = createLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
+        collectionView.register(ReviewCell.self, forCellWithReuseIdentifier: String(describing: ReviewCell.self))
+        return collectionView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    init() {
+        self.viewModel = MyViewModel()
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupSubviews() {
+        [
+            collectionView
+        ].forEach {
+            view.addSubview($0)
+        }
+    }
+    
+    private func setupConstraints() {
+        
+    }
+}
+
+// MARK: - Layout
+extension MyViewController {
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: 121, height: 240)
+        layout.minimumLineSpacing = 16
+        layout.minimumInteritemSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return layout
     }
 }
