@@ -54,6 +54,7 @@ final class MyViewController: UIViewController {
         setupNavigationBar()
         setupSubviews()
         setupConstraints()
+        bind()
     }
     
     init() {
@@ -124,6 +125,24 @@ final class MyViewController: UIViewController {
             $0.top.equalTo(filterView.snp.bottom).offset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
+    }
+    
+    private func bind() {
+        viewModel.reviews
+            .observe(on: MainScheduler.instance)
+            .bind(to: collectionView.rx.items(
+                cellIdentifier: String(describing: ReviewCell.self),
+                cellType: ReviewCell.self
+            )) { (index, review, cell) in
+                cell.configure(with: review)
+            }
+            .disposed(by: disposeBag)
+        
+        collectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                // 리뷰 뷰컨으로 이동
+            })
+            .disposed(by: disposeBag)
     }
 }
 
