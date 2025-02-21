@@ -129,7 +129,7 @@ final class MyViewController: UIViewController {
         collectionView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(16)
             $0.top.equalTo(filterView.snp.bottom).offset(16)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-8)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
