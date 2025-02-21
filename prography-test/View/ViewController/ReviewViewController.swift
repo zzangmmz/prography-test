@@ -10,9 +10,11 @@ import RxSwift
 import RxCocoa
 
 final class ReviewViewController: UIViewController {
-    private var disposeBag = DisposeBag()
     private var movieID: Int
     private var review: Review?
+    
+    private let viewModel: ReviewViewModel
+    private var disposeBag = DisposeBag()
     
     private let posterView: UIImageView = {
         let imageView = UIImageView()
@@ -127,6 +129,7 @@ final class ReviewViewController: UIViewController {
     
     init(movieID: Int) {
         self.movieID = movieID
+        self.viewModel = ReviewViewModel(movieID: movieID)
         super.init(nibName: nil, bundle: nil)
     }
     
